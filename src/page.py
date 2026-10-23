@@ -33,6 +33,7 @@ button{font:inherit;font-size:13px;padding:4px 12px;border-radius:6px;border:1px
 button:hover{background:#f2f7fb}
 .controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0 8px;font-size:14px;position:sticky;top:0;z-index:10}
 .controls .reset{margin-left:auto}
+.controls .play{margin-left:-12px;min-width:78px;font-size:13px}
 .hint{color:var(--muted);font-size:12.5px;margin:0 2px 8px}
 .ms{position:relative;display:flex;align-items:center}
 .ms-btn{min-width:150px;text-align:left;font-size:14px}

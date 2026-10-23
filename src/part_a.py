@@ -149,10 +149,23 @@ sel_end = dodge(a2_base.transform_filter(HL).transform_filter(f"datum.year == {L
     align="left", dx=5, fontSize=11, fontWeight="bold").encode(
     x=x_year, y="label_y:Q", text="name:N", color=color_nolegend)
 year_rule = alt.Chart(ONE).mark_rule(color="#888", strokeDash=[2, 2]).encode(x=alt.datum(alt.expr("yr"), type="quantitative"))
-a2 = alt.layer(medians, sel_lines, sel_end, year_rule, unit_label).properties(
+# 선 종류 범례: 플롯 위(단위 표기 오른쪽)에 그려 데이터 선과 겹치지 않게 한다. 좌표는 px.
+LEG_Y, LEG_COLOR = -10, "#555"
+line_key = alt.layer(
+    alt.Chart(ONE).mark_rule(strokeWidth=2.6, color=LEG_COLOR).encode(
+        x=alt.value(360), x2=alt.value(384), y=alt.value(LEG_Y)),
+    alt.Chart(ONE).mark_text(x=389, y=LEG_Y, text="선택 국가", align="left", baseline="middle", fontSize=11.5, color="#333"),
+    alt.Chart(ONE).mark_rule(strokeWidth=1.4, strokeDash=[4, 3], color=LEG_COLOR).encode(
+        x=alt.value(455), x2=alt.value(479), y=alt.value(LEG_Y)),
+    alt.Chart(ONE).mark_text(x=484, y=LEG_Y, text="대륙별 국가 중앙값", align="left", baseline="middle", fontSize=11.5, color="#333"),
+    alt.Chart(ONE).mark_rule(strokeDash=[2, 2], color="#888").encode(
+        x=alt.value(588), y=alt.value(LEG_Y - 6), y2=alt.value(LEG_Y + 6)),
+    alt.Chart(ONE).mark_text(x=593, y=LEG_Y, text="현재 연도", align="left", baseline="middle", fontSize=11.5, color="#333"),
+)
+a2 = alt.layer(medians, sel_lines, sel_end, year_rule, unit_label, line_key).properties(
     width=640, height=A2_HEIGHT,
     title=title(f"'③ 선택 국가의 ' + {IND_NAME} + ' 추이, {FIRST_YEAR}–{LAST_YEAR}년'",
-                "실선: 선택 국가 · 점선: 대륙별 국가 중앙값 · 세로 점선: 현재 연도"))
+                "선택 국가와 같은 대륙 국가들의 중앙값을 함께 비교"))
 
 # ---- ② 순위 dot plot: 선택 연도 상위·하위 10개국 -----------------------------
 a3 = base.transform_filter("datum.year == yr").transform_filter(reg).transform_window(
@@ -244,6 +257,28 @@ const COUNTRIES = {json.dumps(countries, ensure_ascii=False)};
 const controls = document.getElementById('controls');
 controls.insertBefore(document.querySelector('#dash .vega-bindings'), controls.firstChild);
 
+// ---- 연도 재생: 슬라이더 옆 ▶ 버튼으로 {FIRST_YEAR}→{LAST_YEAR}년을 자동으로 넘긴다 ----
+const range = document.querySelector('.vega-bindings input[type=range]');
+const playBtn = document.createElement('button');
+playBtn.type = 'button';
+playBtn.className = 'play';
+range.closest('.vega-bind').after(playBtn);
+let timer = null;
+function setYear(y) {{ range.value = y; range.dispatchEvent(new Event('input')); }}
+function stopPlay() {{
+  clearInterval(timer); timer = null;
+  playBtn.textContent = '▶ 재생'; playBtn.setAttribute('aria-pressed', 'false');
+}}
+function startPlay() {{
+  let y = +view.signal('yr');
+  if (y >= {LAST_YEAR}) {{ y = {FIRST_YEAR}; setYear(y); }}  // 끝에 있으면 처음부터
+  playBtn.textContent = '⏸ 정지'; playBtn.setAttribute('aria-pressed', 'true');
+  timer = setInterval(() => {{ y += 1; setYear(y); if (y >= {LAST_YEAR}) stopPlay(); }}, 250);
+}}
+playBtn.addEventListener('click', () => timer ? stopPlay() : startPlay());
+['pointerdown', 'keydown'].forEach(e => range.addEventListener(e, stopPlay));  // 직접 조작하면 재생 멈춤
+stopPlay();
+
 function storeVals(name, field) {{
   try {{ return (view.data(name + '_store') || []).map(t => t.values[t.fields.findIndex(f => f.field === field)]); }}
   catch (e) {{ return []; }}
@@ -312,9 +347,7 @@ if (P.has('ind') && P.get('ind') in LABEL) {{
 }}
 const yrParam = parseInt(P.get('yr'), 10);
 if (yrParam >= {FIRST_YEAR} && yrParam <= {LAST_YEAR}) {{
-  view.signal('yr', yrParam);
-  const range = document.querySelector('.vega-bindings input[type=range]');
-  range.value = yrParam; range.dispatchEvent(new Event('input'));
+  setYear(yrParam);
 }}
 const known = new Set(COUNTRIES.map(c => c.name));
 if (P.has('pick')) await setPicks(P.get('pick').split(',').map(s => s.trim()).filter(n => known.has(n)));
@@ -326,6 +359,7 @@ await view.runAsync();
 update();
 
 document.getElementById('reset').addEventListener('click', async () => {{
+  stopPlay();
   view.signal('ind', 'child_mort').signal('yr', {LAST_YEAR});
   view.data('reg_store', []).data('pick_store', initialPick);
   await view.runAsync();
