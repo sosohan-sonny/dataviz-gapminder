@@ -3,9 +3,10 @@
 데이터 시각화 중간고사 대체 과제(Take-Home Exam v1.1) 제출물입니다.
 
 ## 먼저 열어볼 것
-1. **온라인 버전**: (GitHub Pages URL 기입)
+1. **온라인 버전**: https://sosohan-sonny.github.io/dataviz-gapminder/
    - 첫 화면 `index.html`에서 Part A와 Part B로 이동합니다.
-   - Part A: (URL)/explore.html · Part B: (URL)/explain.html
+   - Part A: https://sosohan-sonny.github.io/dataviz-gapminder/explore.html · Part B: https://sosohan-sonny.github.io/dataviz-gapminder/explain.html
+   - 저장소: https://github.com/sosohan-sonny/dataviz-gapminder
 2. **보고서**: `report.pdf`. 설계 근거, 전처리, 강건성 점검, 한계, 가산점 항목을 그림과 함께 정리했습니다(원문은 `report.md`).
 3. **로컬에서 열기**: `docs/explore.html`(Part A), `docs/explain.html`(Part B)을 브라우저로 엽니다.
    - 데이터가 HTML 안에 들어 있어 별도 서버가 필요 없습니다(`file://`로 열어도 동작하는 것을 확인했습니다).

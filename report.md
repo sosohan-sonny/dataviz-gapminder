@@ -3,8 +3,9 @@
 
 | 항목 | 내용 |
 |---|---|
-| Part A (탐색) | *World Health & Wealth Explorer*: `docs/explore.html` · (온라인 URL 기입) |
-| Part B (설명) | *같은 소득, 더 적은 죽음*: `docs/explain.html` · (온라인 URL 기입) |
+| Part A (탐색) | *World Health & Wealth Explorer*: https://sosohan-sonny.github.io/dataviz-gapminder/explore.html |
+| Part B (설명) | *같은 소득, 더 적은 죽음*: https://sosohan-sonny.github.io/dataviz-gapminder/explain.html |
+| 저장소 | https://github.com/sosohan-sonny/dataviz-gapminder (코드·데이터·보고서) |
 | 도구 | Python 3.12 (pandas, statsmodels) → Altair 6 (Vega-Lite 6) → 정적 HTML, GitHub Pages |
 | 데이터 | Gapminder Fast Track + World Bank WDI 2개 지표, 179개국, 1960–2022년 |
 | 가산점 신청 | ① Part A 온라인 게시 ② Part B 온라인 게시 ③ 데이터 수집·결합·정제 (§5) |
