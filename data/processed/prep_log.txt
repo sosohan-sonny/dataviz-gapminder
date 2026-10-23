@@ -1,0 +1,25 @@
+[load] child_mort  rows= 57346 countries=196 years=1800-2100 dup_keys=0
+[load] life_exp    rows= 57335 countries=196 years=1800-2100 dup_keys=0
+[load] fertility   rows= 59297 countries=197 years=1800-2100 dup_keys=0
+[load] gdp_pc      rows= 58695 countries=195 years=1800-2100 dup_keys=0
+[load] pop         rows= 59197 countries=197 years=1800-2100 dup_keys=0
+[filter] years 1960-2022: rows=12411
+[geo] countries without metadata: []
+[exclude] pop<150,000 in 2022: 17 countries -> ['Andorra', 'Antigua and Barbuda', 'Dominica', 'Grenada', 'Kiribati', 'Liechtenstein', 'Marshall Islands', 'Micronesia, Fed. Sts.', 'Monaco', 'Nauru', 'Palau', 'San Marino', 'Seychelles', 'St. Kitts and Nevis', 'St. Vincent and the Grenadines', 'Tonga', 'Tuvalu']
+[exclude] >10% missing in a core indicator: ['Holy See']
+[impute] interpolated core cells: 0 (remaining NA: 6)
+[wb] DTP3 rows=9989; Gapminder countries matched by ISO3: 177/179; unmatched: ['HKG', 'TWN']
+[save] gapminder_clean.csv rows=11277 countries=179 years=1960-2022
+[save] missing share:
+country         0.000
+name            0.000
+iso3            0.000
+region          0.000
+income_group    0.000
+year            0.000
+child_mort      0.000
+life_exp        0.001
+fertility       0.000
+gdp_pc          0.000
+pop             0.000
+dtp3            0.376
